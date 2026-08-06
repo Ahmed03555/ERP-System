@@ -18,5 +18,7 @@ namespace ERP.Domain.Entities.Auth___User
 
         public ICollection<UserRoles> UserRoles { get; set; } = [];
         public ICollection<Notifications> Notifications { get; set; } = [];
+
+        public ICollection<RefreshTokens> RefreshTokens { get; set; } = [];
     }
 }

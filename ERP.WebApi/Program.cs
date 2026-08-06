@@ -1,4 +1,6 @@
 
+using ERP.Infrastructure;
+
 namespace ERP.WebApi
 {
     public class Program
@@ -14,7 +16,7 @@ namespace ERP.WebApi
             //builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            builder.Services.AddInfrastructureServices(builder.Configuration);
 
             var app = builder.Build();
 
