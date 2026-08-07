@@ -1,4 +1,9 @@
 
+using ERP.Application.Common.Interfaces;
+using ERP.Infrastructure;
+using ERP.Application;
+using ERP.WebApi.Services;
+
 namespace ERP.WebApi
 {
     public class Program
@@ -14,7 +19,12 @@ namespace ERP.WebApi
             //builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
+
+            builder.Services.AddInfrastructureServices(builder.Configuration);
+            builder.Services.AddApplicationServices();
 
             var app = builder.Build();
 
@@ -28,6 +38,7 @@ namespace ERP.WebApi
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
