@@ -1,4 +1,5 @@
 ﻿using ERP.Domain.Entities.Common;
+using ERP.Domain.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace ERP.Domain.Entities.Suppliers___Purchase
         public DateTime OrderDate { get; set; }
         public DateTime DeliveryDate { get; set; }
         public decimal TotalAmount { get; set; }
-        public PurchaseOrders Status { get; set; } = default!;
+        public PurchaseOrderStatus Status { get; set; } = default!;
 
         public ICollection<PurchaseOrderItems> PurchaseOrderItems { get; set; } = [];
 

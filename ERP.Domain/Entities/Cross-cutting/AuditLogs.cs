@@ -10,9 +10,9 @@ namespace ERP.Domain.Entities.Cross_cutting
 {
     public class AuditLogs : BaseEntity
     {
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
 
-        public Users Users { get; set; } = default!;
+        public Users? Users { get; set; } = default!;
         public string Entity { get; set; } = default!;
         public int EntityId { get; set; }
         public string Action { get; set; } = default!;

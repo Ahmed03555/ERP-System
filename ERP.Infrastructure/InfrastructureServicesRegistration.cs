@@ -1,5 +1,7 @@
-﻿using ERP.Infrastructure.Date;
+﻿using ERP.Domain.Interfaces;
+using ERP.Infrastructure.Date;
 using ERP.Infrastructure.Identity;
+using ERP.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,8 +23,8 @@ namespace ERP.Infrastructure
             services.AddDbContext<ErbDbContext>(options => { 
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
-            
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             var jwtSettings = configuration
            .GetSection(JwtSettings.SectionName)
            .Get<JwtSettings>()
