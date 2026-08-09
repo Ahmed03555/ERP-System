@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Interfaces;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Interfaces;
 using ERP.Infrastructure.Date;
 using ERP.Infrastructure.Identity;
 using ERP.Infrastructure.Persistence;
@@ -25,6 +26,8 @@ namespace ERP.Infrastructure
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IJwtService, JwtService>();
+            services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName)); 
             var jwtSettings = configuration
            .GetSection(JwtSettings.SectionName)
            .Get<JwtSettings>()
