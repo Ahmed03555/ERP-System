@@ -5,11 +5,13 @@ namespace ERP.Domain.Entities.HR
 {
     public class Employees : BaseEntity
     {
+        public string FullName { get; set; } = default!; 
+
         public int? UserId { get; set; }
-        public Users Users { get; set; } = default!;
+        public Users? Users { get; set; } = default!;
 
         public int? DepartmentId { get; set; }
-        public Departments Departments { get; set; } = default!;
+        public Departments? Departments { get; set; } = default!;
         public DateOnly HireDate { get; set; }
 
         public int? ManagerId { get; set; }

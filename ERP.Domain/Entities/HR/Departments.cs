@@ -14,8 +14,9 @@ namespace ERP.Domain.Entities.HR
         public int? ManagerId { get; set; }
         public Employees Manager { get; set; } = default!;
 
-        public int? EmployeesId { get; set; }
+       
 
-        public Employees Employees { get; set;} = default!;
+        public ICollection<Employees> Employees { get; set; } = [];
+        
     }
 }

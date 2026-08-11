@@ -1,7 +1,10 @@
-﻿using ERP.Application.Common.Models.Auth.Commands.Login;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Application.Common.Models.Auth.Commands.Login;
 using ERP.Application.Common.Models.Auth.Commands.RefreshToken;
 using ERP.Application.Common.Models.Auth.Commands.Register;
+using ERP.WebApi.Services;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +15,11 @@ namespace ERP.WebApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ISender _IMediator;
-
-        public AuthController(ISender IMediator)
+        private readonly ICurrentUserService _currentUserService;
+        public AuthController(ISender IMediator, ICurrentUserService currentUserService)
         {
             _IMediator = IMediator;
+            _currentUserService= currentUserService;
         }
 
         [HttpPost("register")]
@@ -47,6 +51,17 @@ namespace ERP.WebApi.Controllers
             return result.IsSuccess
                 ? Ok(result)
                 : Unauthorized(result.Error);
+        }
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult Me()
+        {
+            return Ok(new
+            {
+                UserId = _currentUserService.UserId,
+                Email = _currentUserService.Email,
+                IsAuthenticated = _currentUserService.IsAuthenticated
+            });
         }
     }
 }

@@ -18,16 +18,20 @@ namespace ERP.Infrastructure.Date.Configration.HrConfigration
             builder.Property(d => d.Name)
                 .IsRequired()
                 .HasColumnType("nvarchar(100)");
+
+
             builder.HasOne(d => d.Manager)
                 .WithMany()
                 .IsRequired(false)
                 .HasForeignKey(d => d.ManagerId)
                 .OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(d => d.Employees)
-                .WithMany()
+
+            builder.HasMany(d => d.Employees)
+                .WithOne(e => e.Departments)
+                .HasForeignKey(e => e.DepartmentId)
                 .IsRequired(false)
-                .HasForeignKey(d => d.EmployeesId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
+
         }
     }
 }

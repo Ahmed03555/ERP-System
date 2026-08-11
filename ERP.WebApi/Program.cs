@@ -2,6 +2,7 @@
 using ERP.Application;
 using ERP.Application.Common.Interfaces;
 using ERP.Infrastructure;
+using ERP.WebApi.Middlewares;
 using ERP.WebApi.Services;
 using Microsoft.OpenApi.Models;
 
@@ -64,7 +65,7 @@ namespace ERP.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseAuthentication();

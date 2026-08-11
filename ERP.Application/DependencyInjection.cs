@@ -14,14 +14,18 @@ namespace ERP.Application
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
-
+            var assembly = typeof(DependencyInjection).Assembly;
             services.AddMediatR(cfg => { cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
                 cfg.AddOpenBehavior(typeof(UnhandledExceptionBehavior<,>));
                 cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
                 cfg.AddOpenBehavior(typeof(PerformanceBehavior<,>));
                 cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
-            
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddMaps(assembly);
+            });
+
             return services;
         }
     }

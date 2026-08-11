@@ -4,6 +4,7 @@ using ERP.Infrastructure.Date;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Infrastructure.Date.Migrations
 {
     [DbContext(typeof(ErbDbContext))]
-    partial class ErbDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260809131220_UpdateDepartments")]
+    partial class UpdateDepartments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -602,10 +605,6 @@ namespace ERP.Infrastructure.Date.Migrations
 
                     b.Property<int?>("DepartmentsId")
                         .HasColumnType("int");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateOnly>("HireDate")
                         .HasColumnType("date");
