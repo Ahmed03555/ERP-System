@@ -3,6 +3,7 @@ using ERP.Domain.Interfaces;
 using ERP.Infrastructure.Date;
 using ERP.Infrastructure.Identity;
 using ERP.Infrastructure.Persistence;
+using ERP.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +28,7 @@ namespace ERP.Infrastructure
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IDateTime,DateTimeService>();
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName)); 
             var jwtSettings = configuration
            .GetSection(JwtSettings.SectionName)
