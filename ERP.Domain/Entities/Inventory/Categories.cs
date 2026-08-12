@@ -12,7 +12,7 @@ namespace ERP.Domain.Entities.Inventory
         public string Name { get; set; } =default!;
 
         public int? ParentCategoryId { get; set; }
-        public Categories ParentCategory { get; set; } = default!;
+        public Categories? ParentCategory { get; set; } = default!;
 
         public ICollection<Categories> SubCategories { get; set; } = [];
 
