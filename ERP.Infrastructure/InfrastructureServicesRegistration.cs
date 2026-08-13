@@ -1,4 +1,5 @@
 ﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Entities.Inventory;
 using ERP.Domain.Interfaces;
 using ERP.Infrastructure.Date;
 using ERP.Infrastructure.Identity;
@@ -29,6 +30,7 @@ namespace ERP.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IDateTime,DateTimeService>();
+            services.AddScoped<IStockService, StockService>();
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName)); 
             var jwtSettings = configuration
            .GetSection(JwtSettings.SectionName)
