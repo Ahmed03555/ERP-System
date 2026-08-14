@@ -2,6 +2,7 @@
 using ERP.Domain.Interfaces;
 using ERP.Infrastructure.Date;
 using ERP.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,12 @@ namespace ERP.Infrastructure.Persistence
             _dbContext = dbContext;
             
         }
+
+        public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
+        {
+           return _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        }
+
         public IRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity
         {
             
