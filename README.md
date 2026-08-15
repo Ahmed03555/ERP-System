@@ -36,6 +36,7 @@ Unit of Work** patterns.
 - [x] HR Module (Employees, Departments, Attendance, Payroll)
 - [x] Inventory & Sales Modules
 - [x] Customers & Sales Orders (with transactional stock validation)
+- [x] Roles & Permissions with dynamic permission-based authorization
 ## 🚀 Getting Started
 
 1. Clone the repo
