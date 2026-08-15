@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ERP.Domain.Entities.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ERP.Domain.Entities.Auth___User
 {
-    public class UserRoles
+    public class UserRoles:BaseEntity
     {
        public int UserId { get; set; }
         public Users User { get; set; } = default!;

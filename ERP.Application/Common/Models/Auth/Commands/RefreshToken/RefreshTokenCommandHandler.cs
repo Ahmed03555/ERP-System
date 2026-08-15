@@ -44,8 +44,30 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, R
         storedToken.RevokedOn = DateTime.UtcNow;
         refreshTokenRepository.UpdateAsync(storedToken);
 
-  
-        var newAccessToken = _jwtService.GenerateAccessToken(storedToken.User, new List<string>());
+
+        var roleIds = await _unitOfWork
+            .GetRepository<UserRoles>()
+            .Query()
+            .Where(ur => ur.UserId == storedToken.UserId)
+            .Select(ur => ur.RoleId)
+            .ToListAsync(cancellationToken);
+
+        var roles = await _unitOfWork
+            .GetRepository<UserRoles>()
+            .Query()
+            .Where(ur => ur.UserId == storedToken.UserId)
+            .Select(ur => ur.Role.Name)
+            .ToListAsync(cancellationToken);
+
+        var permissions = await _unitOfWork
+            .GetRepository<RolePermissions>()
+            .Query()
+            .Where(rp => roleIds.Contains(rp.RoleId))
+            .Select(rp => rp.Permission.Name)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        var newAccessToken = _jwtService.GenerateAccessToken(storedToken.User, roles, permissions);
         var newRefreshTokenValue = _jwtService.GenerateRefreshToken();
 
         var newRefreshToken = new RefreshTokens

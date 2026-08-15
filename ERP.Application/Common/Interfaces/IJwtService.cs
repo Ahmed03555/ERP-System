@@ -9,7 +9,7 @@ namespace ERP.Application.Common.Interfaces
 {
     public interface IJwtService
     {
-        string GenerateAccessToken(Users user, IList<string> roles);
+        string GenerateAccessToken(Users user, IList<string> roles,IList<string> permissions);
         string GenerateRefreshToken();
         int RefreshTokenExpirationDays { get; }
     }

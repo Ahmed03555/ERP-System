@@ -24,6 +24,7 @@ namespace ERP.WebApi.Controllers
             => _mediator = mediator;
 
         [HttpPost]
+        [Authorize(Policy = "Employees.Create")]
         public async Task<IActionResult> Create(CreateEmployeeCommand command)
         {
             var result = await _mediator.Send(command);

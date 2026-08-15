@@ -22,7 +22,7 @@ namespace ERP.Infrastructure.Identity
         public JwtService(IOptions<JwtSettings> options)
             => _settings = options.Value;
 
-        public string GenerateAccessToken(Users user, IList<string> roles)
+        public string GenerateAccessToken(Users user, IList<string> roles, IList<string> permissions)
         {
             var claims = new List<Claim>
         {
@@ -30,6 +30,7 @@ namespace ERP.Infrastructure.Identity
             new(ClaimTypes.Email, user.Email!),
         };
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+            claims.AddRange(permissions.Select(p => new Claim("permission", p)));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.SecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

@@ -5,15 +5,18 @@ using ERP.Domain.Entities.HR;
 using ERP.Domain.Entities.Inventory;
 
 using ERP.Domain.Entities.Suppliers___Purchase;
+using ERP.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Infrastructure.Date;
 
 public class ErbDbContext : DbContext
 {
-    public ErbDbContext(DbContextOptions<ErbDbContext> options)
+    private readonly AuditableEntityInterceptor _auditableEntityInterceptor;
+    public ErbDbContext(DbContextOptions<ErbDbContext> options, AuditableEntityInterceptor auditableEntityInterceptor)
         : base(options)
     {
+        _auditableEntityInterceptor = auditableEntityInterceptor;
     }
 
     // ==========================
@@ -82,8 +85,10 @@ public class ErbDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
-
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ErbDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ErbDbContext).Assembly);   
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(_auditableEntityInterceptor);
     }
 }

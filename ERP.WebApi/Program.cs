@@ -2,8 +2,10 @@
 using ERP.Application;
 using ERP.Application.Common.Interfaces;
 using ERP.Infrastructure;
+using ERP.WebApi.Authorization;
 using ERP.WebApi.Middlewares;
 using ERP.WebApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 
 namespace ERP.WebApi
@@ -60,6 +62,13 @@ namespace ERP.WebApi
 
             builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
+            builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Employees.Create", policy =>
+                    policy.Requirements.Add(new PermissionRequirement("Employees.Create")));
+            });
 
             var app = builder.Build();
 

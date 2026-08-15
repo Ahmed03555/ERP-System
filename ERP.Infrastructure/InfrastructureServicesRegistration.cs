@@ -4,6 +4,7 @@ using ERP.Domain.Interfaces;
 using ERP.Infrastructure.Date;
 using ERP.Infrastructure.Identity;
 using ERP.Infrastructure.Persistence;
+using ERP.Infrastructure.Persistence.Interceptors;
 using ERP.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,8 @@ namespace ERP.Infrastructure
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IDateTime,DateTimeService>();
             services.AddScoped<IStockService, StockService>();
-            services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName)); 
+            services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+            services.AddScoped<AuditableEntityInterceptor>();
             var jwtSettings = configuration
            .GetSection(JwtSettings.SectionName)
            .Get<JwtSettings>()
