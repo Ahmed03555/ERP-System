@@ -1,0 +1,18 @@
+﻿using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ERP.Application.Common.Models.Products.Commands.UpdateProduct
+{
+    public record UpdateProductCommand(
+            int Id,
+            string SKU,
+            string Name,
+            int CategoryId,
+            decimal UnitPrice,
+            int ReorderLevel
+        ) : IRequest<Result<bool>>;
+}
