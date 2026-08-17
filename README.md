@@ -37,6 +37,10 @@ Unit of Work** patterns.
 - [x] Inventory & Sales Modules
 - [x] Customers & Sales Orders (with transactional stock validation)
 - [x] Roles & Permissions with dynamic permission-based authorization
+- [x] Full CRUD for all core modules (Departments, Employees, Categories, Products, Warehouses, Suppliers, Customers)
+- [x] Business workflows with transactional integrity (Purchase Orders, Sales Orders)
+- [x] Dynamic permission-based authorization
+- [x] Automatic audit trail via EF Core interceptors
 ## 🚀 Getting Started
 
 1. Clone the repo
