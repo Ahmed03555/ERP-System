@@ -41,6 +41,7 @@ Unit of Work** patterns.
 - [x] Business workflows with transactional integrity (Purchase Orders, Sales Orders)
 - [x] Dynamic permission-based authorization
 - [x] Automatic audit trail via EF Core interceptors
+- [x] Redis caching on read-heavy queries (List/GetById) with automatic invalidation
 ## 🚀 Getting Started
 
 1. Clone the repo
