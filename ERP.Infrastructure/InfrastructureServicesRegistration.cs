@@ -1,6 +1,7 @@
 ﻿using ERP.Application.Common.Interfaces;
 using ERP.Domain.Entities.Inventory;
 using ERP.Domain.Interfaces;
+using ERP.Infrastructure.Caching;
 using ERP.Infrastructure.Date;
 using ERP.Infrastructure.Identity;
 using ERP.Infrastructure.Persistence;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +36,10 @@ namespace ERP.Infrastructure
             services.AddScoped<IStockService, StockService>();
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
             services.AddScoped<AuditableEntityInterceptor>();
+            services.AddSingleton<IConnectionMultiplexer>(
+                ConnectionMultiplexer.Connect(configuration.GetConnectionString("RedisConnection") ?? "localhost"));
+
+            services.AddScoped<ICacheService, RedisCacheService>();
             var jwtSettings = configuration
            .GetSection(JwtSettings.SectionName)
            .Get<JwtSettings>()
@@ -44,6 +50,7 @@ namespace ERP.Infrastructure
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
+
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters

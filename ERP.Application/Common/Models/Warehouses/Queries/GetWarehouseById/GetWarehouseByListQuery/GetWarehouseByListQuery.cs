@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using ERP.Application.Common.Interfaces;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace ERP.Application.Common.Models.Warehouses.Queries.GetWarehouseById.GetWarehouseByListQuery
 {
-    public record GetWarehouseByListQuery : IRequest<Result<List<WarehouseDto>>>;
+    public record GetWarehouseByListQuery : IRequest<Result<List<WarehouseDto>>>, ICacheableQuery
+    {
+        public string CacheKey => $"warehouses:list";
+        public TimeSpan? Expiration => TimeSpan.FromMinutes(10);
+    }
 
 }

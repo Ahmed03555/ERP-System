@@ -1,4 +1,5 @@
-﻿using ERP.Application.Common.Models.Products.Queries.GetProductById;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Application.Common.Models.Products.Queries.GetProductById;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,5 +9,9 @@ using System.Threading.Tasks;
 
 namespace ERP.Application.Common.Models.Products.Queries.GetProductsList
 {
-    public record GetProductsListQuery : IRequest<Result<List<ProductDto>>>;
+    public record GetProductsListQuery : IRequest<Result<List<ProductDto>>>, ICacheableQuery
+    {
+        public string CacheKey => $"products:list";
+        public TimeSpan? Expiration => TimeSpan.FromMinutes(10);
+    }
 }

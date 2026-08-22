@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Interfaces;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,10 +13,12 @@ namespace ERP.Application.Common.Models.Warehouses.UpdateWarehouse
     public class UpdateWarehouseCommandHandler : IRequestHandler<UpdateWarehouseCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICacheService _cacheService;
 
-        public UpdateWarehouseCommandHandler(IUnitOfWork unitOfWork)
+        public UpdateWarehouseCommandHandler(IUnitOfWork unitOfWork,ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
         public async Task<Result<bool>> Handle(UpdateWarehouseCommand request, CancellationToken cancellationToken)
         {
@@ -39,6 +42,7 @@ namespace ERP.Application.Common.Models.Warehouses.UpdateWarehouse
             warehouseRepo.UpdateAsync(warehouseExist);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _cacheService.RemoveByPrefixAsync("warehouses:", cancellationToken);
 
             return Result<bool>.Success(true);
 

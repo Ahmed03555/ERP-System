@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Entities.Customers___Sales;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Entities.Customers___Sales;
 using ERP.Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,13 @@ namespace ERP.Application.Common.Models.Customers.Commands.DeleteCustomer
     public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICacheService _cacheService;
 
-        public DeleteCustomerCommandHandler(IUnitOfWork unitOfWork)
+        public DeleteCustomerCommandHandler(IUnitOfWork unitOfWork,ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
+
         }
         public async Task<Result<bool>> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
@@ -37,6 +41,7 @@ namespace ERP.Application.Common.Models.Customers.Commands.DeleteCustomer
 
             customerRepo.RemoveAsync(customerExist);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _cacheService.RemoveByPrefixAsync("customers:", cancellationToken);
 
             return Result<bool>.Success(true);
         }

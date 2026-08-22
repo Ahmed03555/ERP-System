@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Entities.HR;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Entities.HR;
 using ERP.Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,11 @@ namespace ERP.Application.Common.Models.CreateDepartment.Commands
     public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCommand, Result<int>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CreateDepartmentCommandHandler(IUnitOfWork unitOfWork)
+        private readonly ICacheService _cacheService;
+        public CreateDepartmentCommandHandler(IUnitOfWork unitOfWork,ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
         public async Task<Result<int>> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
         {
@@ -45,6 +48,9 @@ namespace ERP.Application.Common.Models.CreateDepartment.Commands
         
             await departmentRepository.AddAsync(department, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            await _cacheService.RemoveAsync("departments", cancellationToken);
+            
 
             return Result<int>.Success(department.Id);
 

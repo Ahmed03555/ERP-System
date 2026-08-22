@@ -1,4 +1,5 @@
-﻿using ERP.Application.Common.Models;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Application.Common.Models;
 using ERP.Application.Common.Models.Employee.Commands.DeleteEmployee;
 using ERP.Domain.Entities.HR;
 using ERP.Domain.Interfaces;
@@ -11,9 +12,13 @@ namespace ERP.Application.Modules.Employees.Commands.DeleteEmployee;
 public class DeleteEmployeeCommandHandler : IRequestHandler<DeleteEmployeeCommand, Result<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICacheService _cacheService;
 
-    public DeleteEmployeeCommandHandler(IUnitOfWork unitOfWork)
-        => _unitOfWork = unitOfWork;
+    public DeleteEmployeeCommandHandler(IUnitOfWork unitOfWork, ICacheService cacheService)
+
+    { _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
+    }
 
     public async Task<Result<bool>> Handle(DeleteEmployeeCommand request, CancellationToken cancellationToken)
     {
@@ -45,6 +50,7 @@ public class DeleteEmployeeCommandHandler : IRequestHandler<DeleteEmployeeComman
      
         employeeRepository.RemoveAsync(employee);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("products:", cancellationToken);
 
         return Result<bool>.Success(true);
     }

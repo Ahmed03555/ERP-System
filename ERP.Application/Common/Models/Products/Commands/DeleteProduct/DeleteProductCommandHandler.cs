@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Entities.Inventory;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Entities.Inventory;
 using ERP.Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,11 @@ namespace ERP.Application.Common.Models.Products.Commands.DeleteProduct
     public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public DeleteProductCommandHandler(IUnitOfWork unitOfWork)
+        private readonly ICacheService _cacheService;
+        public DeleteProductCommandHandler(IUnitOfWork unitOfWork,ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
         public async Task<Result<bool>> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
@@ -36,6 +39,8 @@ namespace ERP.Application.Common.Models.Products.Commands.DeleteProduct
             ProductRepo.RemoveAsync(productExist);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _cacheService.RemoveByPrefixAsync("products:",cancellationToken);
+
 
             return Result<bool>.Success(true);
         }

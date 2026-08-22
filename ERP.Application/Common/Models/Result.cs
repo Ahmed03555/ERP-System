@@ -8,11 +8,12 @@ namespace ERP.Application.Common.Models
 {
     public class Result<T>
     {
-        public bool IsSuccess { get; }
-        public T? Value { get; }
-        public string? Error { get; }
+        public bool IsSuccess { get; set; }        
+        public T? Value { get; set; }             
+        public string? Error { get; set; }          
+        public List<string>? Errors { get; set; }  
 
-        public List<string>? Errors { get; }
+        public Result() { }
 
         private Result(bool isSuccess, T? value, string? error, List<string>? errors)
         {
@@ -26,10 +27,12 @@ namespace ERP.Application.Common.Models
         {
             return new Result<T>(true, value, null, null);
         }
+
         public static Result<T> Failure(string error)
         {
             return new Result<T>(false, default, error, null);
         }
+
         public static Result<T> Failure(List<string> errors)
         {
             return new Result<T>(false, default, null, errors);

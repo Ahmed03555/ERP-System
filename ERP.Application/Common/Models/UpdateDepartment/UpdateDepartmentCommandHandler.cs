@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Entities.HR;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Entities.HR;
 using ERP.Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,11 @@ namespace ERP.Application.Common.Models.UpdateDepartment
     public class UpdateDepartmentCommandHandler : IRequestHandler<UpdateDepartmentCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public UpdateDepartmentCommandHandler(IUnitOfWork unitOfWork)
+        private readonly ICacheService _cacheService;
+        public UpdateDepartmentCommandHandler(IUnitOfWork unitOfWork ,ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
 
 
@@ -47,6 +50,9 @@ namespace ERP.Application.Common.Models.UpdateDepartment
 
             departrepo.UpdateAsync(department);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            await _cacheService.RemoveAsync("departments", cancellationToken);
+           
 
             return Result<bool>.Success(true);
         }

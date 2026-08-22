@@ -20,6 +20,7 @@ namespace ERP.Application
                 cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
                 cfg.AddOpenBehavior(typeof(PerformanceBehavior<,>));
                 cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                cfg.AddOpenBehavior(typeof(CachingBehavior<,>));
             });
             services.AddAutoMapper(cfg =>
             {

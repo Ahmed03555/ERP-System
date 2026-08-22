@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Entities.Inventory;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Entities.Inventory;
 using ERP.Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,11 @@ namespace ERP.Application.Common.Models.Categories.Commands.DeleteCategory
     public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public DeleteCategoryCommandHandler(IUnitOfWork unitOfWork)
+        private readonly ICacheService _cacheService;
+        public DeleteCategoryCommandHandler(IUnitOfWork unitOfWork,ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
         public async Task<Result<bool>> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
@@ -44,6 +47,7 @@ namespace ERP.Application.Common.Models.Categories.Commands.DeleteCategory
 
             categoryRepo.RemoveAsync(category);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _cacheService.RemoveByPrefixAsync("categories:", cancellationToken);
 
             return Result<bool>.Success(true);
         }

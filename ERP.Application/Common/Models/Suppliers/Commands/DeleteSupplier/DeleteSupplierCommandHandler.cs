@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Interfaces;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,10 +13,11 @@ namespace ERP.Application.Common.Models.Suppliers.Commands.DeleteSupplier
     public class DeleteSupplierCommandHandler : IRequestHandler<DeleteSupplierCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
-
-        public DeleteSupplierCommandHandler(IUnitOfWork unitOfWork)
+        private readonly ICacheService _cacheService;
+        public DeleteSupplierCommandHandler(IUnitOfWork unitOfWork,ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
         public async Task<Result<bool>> Handle(DeleteSupplierCommand request, CancellationToken cancellationToken)
         {
@@ -34,6 +36,7 @@ namespace ERP.Application.Common.Models.Suppliers.Commands.DeleteSupplier
 
             supplierRepo.RemoveAsync(supplierExist);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _cacheService.RemoveByPrefixAsync("suppliers:", cancellationToken);
 
             return Result<bool>.Success(true);
         }

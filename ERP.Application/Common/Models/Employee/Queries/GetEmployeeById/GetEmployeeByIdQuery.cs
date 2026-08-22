@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using ERP.Application.Common.Interfaces;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,5 +8,9 @@ using System.Threading.Tasks;
 
 namespace ERP.Application.Common.Models.Employee.Queries.GetEmployeeById
 {
-    public record GetEmployeeByIdQuery(int Id) : IRequest<Result<EmployeeDto>>;
+    public record GetEmployeeByIdQuery(int Id) : IRequest<Result<EmployeeDto>>, ICacheableQuery
+    {
+        public string CacheKey => $"employees:byid:{Id}";
+        public TimeSpan? Expiration => TimeSpan.FromMinutes(10);
+    }
 }

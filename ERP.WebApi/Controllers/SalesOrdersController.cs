@@ -1,5 +1,7 @@
 ﻿using ERP.Application.Common.Models.SalesOrders.Commands.ConfirmSalesOrder;
 using ERP.Application.Common.Models.SalesOrders.Commands.CreateSalesOrder;
+using ERP.Application.Common.Models.SalesOrders.Queries;
+using ERP.Application.Common.Models.SalesOrders.Queries.GetSalesOrdersList;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -35,5 +37,20 @@ namespace ERP.WebApi.Controllers
             var result = await _mediator.Send(command);
             return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _mediator.Send(new GetSalesOrderByIdQuery(id));
+            return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetList()
+        {
+            var result = await _mediator.Send(new GetSalesOrdersListQuery());
+            return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
+        }
+
     }
 }

@@ -1,5 +1,7 @@
 ﻿using ERP.Application.Common.Models;
+using ERP.Application.Common.Models.Products.Queries.GetProductsList;
 using ERP.Application.Common.Models.PurchaseOrders.Commands.CreatePurchaseOrder;
+using ERP.Application.Common.Models.PurchaseOrders.Commands.Queries.GetPurchaseOrderById;
 using ERP.Application.Common.Models.PurchaseOrders.Commands.ReceivePurchaseOrder;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -36,6 +38,20 @@ namespace ERP.WebApi.Controllers
 
             var result = await _sender.Send(command);
         return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _sender.Send(new GetPurchaseOrderByIdQuery(id));
+            return result.IsSuccess ? Ok(result) : NotFound(result.Error);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetList()
+        {
+            var result = await _sender.Send(new GetProductsListQuery());
+            return result.IsSuccess ? Ok(result) : NotFound(result.Error);
         }
     }
 }

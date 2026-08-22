@@ -1,4 +1,5 @@
-﻿using ERP.Application.Common.Models.Suppliers.GetSupplierById;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Application.Common.Models.Suppliers.GetSupplierById;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace ERP.Application.Common.Models.Suppliers.GetSupplierByList
 {
-    public record GetSuppliersListQuery : IRequest<Result<List<SupplierDto>>>;
+    public record GetSuppliersListQuery : IRequest<Result<List<SupplierDto>>>,ICacheableQuery
+    {
+        public string CacheKey => $"supplieres:list";
+        public TimeSpan? Expiration => TimeSpan.FromMinutes(10);
+    }
 
 }

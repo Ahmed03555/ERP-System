@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Entities.Enums;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Entities.Enums;
 using ERP.Domain.Entities.Inventory;
 using ERP.Domain.Entities.Suppliers___Purchase;
 using ERP.Domain.Interfaces;
@@ -16,10 +17,12 @@ namespace ERP.Application.Common.Models.PurchaseOrders.Commands.ReceivePurchaseO
     {
         private readonly IStockService _stockService;
         private readonly IUnitOfWork _unitOfWork;
-        public ReceivePurchaseOrderCommandHandler(IStockService stockService,IUnitOfWork unitOfWork)
+        private readonly ICacheService _cacheService;
+        public ReceivePurchaseOrderCommandHandler(IStockService stockService,IUnitOfWork unitOfWork ,ICacheService cacheService)
         {
             _stockService = stockService;
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
         public async Task<Result<bool>> Handle(ReceivePurchaseOrderCommand request, CancellationToken cancellationToken)
         {
@@ -51,6 +54,7 @@ namespace ERP.Application.Common.Models.PurchaseOrders.Commands.ReceivePurchaseO
                     purchaseOrderRepo.UpdateAsync( purchaseOrder );
                     await _unitOfWork.SaveChangesAsync(cancellationToken);
                     await transaction.CommitAsync(cancellationToken);
+                    await _cacheService.RemoveByPrefixAsync("purchaseorders:", cancellationToken);
                 }
 
 

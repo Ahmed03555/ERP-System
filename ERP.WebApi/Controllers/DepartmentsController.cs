@@ -56,7 +56,7 @@ namespace ERP.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             var result = await _sender.Send(new DeleteDepartmentCommand(id));
             return result.IsSuccess ? Ok(result) : BadRequest(result.Error);

@@ -26,11 +26,19 @@ public class ExceptionHandlingMiddleware
             await WriteResponse(context, HttpStatusCode.BadRequest,
                 ex.Errors.Select(e => e.ErrorMessage));
         }
+        //catch (Exception ex)
+        //{
+        //    _logger.LogError(ex, "Unhandled exception occurred.");
+        //    await WriteResponse(context, HttpStatusCode.InternalServerError,
+        //        new[] { "An unexpected error occurred." });
+        //}
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception occurred.");
+
+
             await WriteResponse(context, HttpStatusCode.InternalServerError,
-                new[] { "An unexpected error occurred." });
+                new[] { ex.GetType().Name, ex.Message, ex.InnerException?.Message ?? "no inner exception" });
         }
     }
 

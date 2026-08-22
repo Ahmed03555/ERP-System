@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ERP.Application.Common.Interfaces;
 using ERP.Application.Common.Models.CreateDepartment.Queries.GetDepartmentById;
 using ERP.Domain.Entities.HR;
 using ERP.Domain.Interfaces;
@@ -15,10 +16,12 @@ namespace ERP.Application.Common.Models.CreateDepartment.Queries.GetDepartmentsL
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        
         public GetDepartmentListQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
              _unitOfWork = unitOfWork;
             _mapper = mapper;
+            
         }
         public async Task<Result<List<DepartmentDto>>> Handle(GetDepartmentsListQuery request, CancellationToken cancellationToken)
         {

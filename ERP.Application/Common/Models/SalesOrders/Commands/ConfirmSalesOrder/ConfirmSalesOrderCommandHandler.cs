@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Entities.Enums;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Entities.Enums;
 using ERP.Domain.Entities.Inventory;
 using ERP.Domain.Interfaces;
 using MediatR;
@@ -15,11 +16,13 @@ namespace ERP.Application.Common.Models.SalesOrders.Commands.ConfirmSalesOrder
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStockService _stockService;
+        private readonly ICacheService _cacheService;
 
-        public ConfirmSalesOrderCommandHandler(IUnitOfWork unitOfWork, IStockService stockService)
+        public ConfirmSalesOrderCommandHandler(IUnitOfWork unitOfWork, IStockService stockService,ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
             _stockService = stockService;
+            _cacheService = cacheService;
         }
 
         public async Task<Result<bool>> Handle(ConfirmSalesOrderCommand request, CancellationToken cancellationToken)
@@ -56,6 +59,7 @@ namespace ERP.Application.Common.Models.SalesOrders.Commands.ConfirmSalesOrder
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                 await transaction.CommitAsync(cancellationToken);
+                await _cacheService.RemoveByPrefixAsync("salesorders:", cancellationToken);
             }
             catch (InvalidOperationException ex)
             {

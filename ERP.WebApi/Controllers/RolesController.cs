@@ -1,5 +1,6 @@
 ﻿using ERP.Application.Common.Models.Roles.Commands.AssignPermissionToRole;
 using ERP.Application.Common.Models.Roles.Commands.AssignRoleToUser;
+using ERP.Application.Common.Models.Roles.Commands.CreateRole;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -33,5 +34,14 @@ namespace ERP.WebApi.Controllers
             var result = await _mediator.Send(command);
             return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateRoleCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
+        }
+
+
     }
 }

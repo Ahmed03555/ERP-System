@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Entities.Enums;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Entities.Enums;
 using ERP.Domain.Entities.Inventory;
 using ERP.Domain.Entities.Suppliers___Purchase;
 using ERP.Domain.Interfaces;
@@ -14,9 +15,11 @@ namespace ERP.Application.Common.Models.PurchaseOrders.Commands.CreatePurchaseOr
     public class CreatePurchaseOrderCommandHandler : IRequestHandler<CreatePurchaseOrderCommand, Result<int>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CreatePurchaseOrderCommandHandler(IUnitOfWork unitOfWork)
+        private readonly ICacheService _cacheService;
+        public CreatePurchaseOrderCommandHandler(IUnitOfWork unitOfWork,ICacheService cacheService)
         {
            _unitOfWork = unitOfWork; 
+            _cacheService = cacheService;
         }
         public async Task<Result<int>> Handle(CreatePurchaseOrderCommand request, CancellationToken cancellationToken)
         {
@@ -53,6 +56,7 @@ namespace ERP.Application.Common.Models.PurchaseOrders.Commands.CreatePurchaseOr
 
             await _unitOfWork.GetRepository<Domain.Entities.Suppliers___Purchase.PurchaseOrders>().AddAsync(purchase, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _cacheService.RemoveByPrefixAsync("purchaseorders:", cancellationToken); // redis
 
             return Result<int>.Success(purchase.Id);
         }
