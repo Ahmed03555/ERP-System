@@ -34,6 +34,5 @@ namespace ERP.Application.Common.Models
         {
             return new Result<T>(false, default, null, errors);
         }
-
     }
 }
