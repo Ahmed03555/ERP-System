@@ -42,6 +42,8 @@ Unit of Work** patterns.
 - [x] Dynamic permission-based authorization
 - [x] Automatic audit trail via EF Core interceptors
 - [x] Redis caching on read-heavy queries (List/GetById) with automatic invalidation
+- [x] Purchase Orders & Sales Orders — full lifecycle (Create, Read, Receive/Confirm)
+- [x] Roles & Permissions management API (Create, Assign)
 ## 🚀 Getting Started
 
 1. Clone the repo
