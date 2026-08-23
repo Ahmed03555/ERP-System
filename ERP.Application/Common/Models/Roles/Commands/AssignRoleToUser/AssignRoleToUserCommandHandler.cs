@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Entities.Auth___User;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Entities.Auth___User;
 using ERP.Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,11 @@ namespace ERP.Application.Common.Models.Roles.Commands.AssignRoleToUser
     public class AssignRoleToUserCommandHandler : IRequestHandler<AssignRoleToUserCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public AssignRoleToUserCommandHandler(IUnitOfWork unitOfWork)
+        private readonly ICacheService _cacheService;
+        public AssignRoleToUserCommandHandler(IUnitOfWork unitOfWork,ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
         public async Task<Result<bool>> Handle(AssignRoleToUserCommand request, CancellationToken cancellationToken)
         {
@@ -46,6 +49,7 @@ namespace ERP.Application.Common.Models.Roles.Commands.AssignRoleToUser
 
             await userRoleRepository.AddAsync(roleUser, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _cacheService.RemoveByPrefixAsync("roles:", cancellationToken);
 
             return Result<bool>.Success(true);
         }

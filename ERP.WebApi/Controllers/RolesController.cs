@@ -1,6 +1,8 @@
 ﻿using ERP.Application.Common.Models.Roles.Commands.AssignPermissionToRole;
 using ERP.Application.Common.Models.Roles.Commands.AssignRoleToUser;
 using ERP.Application.Common.Models.Roles.Commands.CreateRole;
+using ERP.Application.Common.Models.Roles.Queries.GetRoleById;
+using ERP.Application.Common.Models.Roles.Queries.GetRolesList;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -41,7 +43,19 @@ namespace ERP.WebApi.Controllers
             var result = await _mediator.Send(command);
             return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetList()
+        {
+            var result = await _mediator.Send(new GetRolesListQuery());
+            return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
+        }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _mediator.Send(new GetRoleByIdQuery(id));
+            return result.IsSuccess ? Ok(result) : NotFound(result.Error);
+        }
 
     }
 }

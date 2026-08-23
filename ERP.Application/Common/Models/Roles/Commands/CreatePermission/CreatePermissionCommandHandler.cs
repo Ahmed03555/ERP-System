@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Entities.Auth___User;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Entities.Auth___User;
 using ERP.Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,12 @@ namespace ERP.Application.Common.Models.Roles.Commands.CreatePermission
     public class CreatePermissionCommandHandler : IRequestHandler<CreatePermissionCommand, Result<int>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICacheService _cacheService;
 
-        public CreatePermissionCommandHandler(IUnitOfWork unitOfWork)
-            => _unitOfWork = unitOfWork;
+        public CreatePermissionCommandHandler(IUnitOfWork unitOfWork, ICacheService cacheService)
+        { _unitOfWork = unitOfWork; 
+            _cacheService = cacheService;
+        }
 
         public async Task<Result<int>> Handle(CreatePermissionCommand request, CancellationToken cancellationToken)
         {
@@ -37,6 +41,7 @@ namespace ERP.Application.Common.Models.Roles.Commands.CreatePermission
 
             await permissionRepository.AddAsync(permission, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _cacheService.RemoveByPrefixAsync("roles:", cancellationToken);
 
             return Result<int>.Success(permission.Id);
         }

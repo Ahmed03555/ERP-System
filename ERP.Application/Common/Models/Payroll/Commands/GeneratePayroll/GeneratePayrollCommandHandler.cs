@@ -1,4 +1,5 @@
-﻿using ERP.Domain.Entities.Enums;
+﻿using ERP.Application.Common.Interfaces;
+using ERP.Domain.Entities.Enums;
 using ERP.Domain.Entities.HR;
 using ERP.Domain.Interfaces;
 using MediatR;
@@ -14,9 +15,11 @@ namespace ERP.Application.Common.Models.Payroll.Commands.GeneratePayroll
     public class GeneratePayrollCommandHandler : IRequestHandler<GeneratePayrollCommand, Result<int>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public GeneratePayrollCommandHandler(IUnitOfWork unitOfWork)
+        private readonly ICacheService _cacheService;
+        public GeneratePayrollCommandHandler(IUnitOfWork unitOfWork,ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
         public async Task<Result<int>> Handle(GeneratePayrollCommand request, CancellationToken cancellationToken)
         {
@@ -62,6 +65,7 @@ namespace ERP.Application.Common.Models.Payroll.Commands.GeneratePayroll
 
             await payrollRepository.AddAsync(payroll,cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _cacheService.RemoveByPrefixAsync("payroll:", cancellationToken);
 
             return Result<int>.Success(payroll.Id);
         }

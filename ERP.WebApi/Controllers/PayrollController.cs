@@ -1,4 +1,6 @@
-﻿using ERP.Application.Common.Models.Payroll.Commands.GeneratePayroll;
+﻿using ERP.Application.Common.Models.Categories.Queries.GetCategoriesList;
+using ERP.Application.Common.Models.Payroll.Commands.GeneratePayroll;
+using ERP.Application.Common.Models.Payroll.Queries.GetPayrollById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +28,21 @@ namespace ERP.WebApi.Controllers
             return result.IsSuccess
                 ? Ok(result)
                 : BadRequest(result.Error);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _sender.Send(new GetPayrollByIdQuery(id));
+            return result.IsSuccess ? Ok(result): BadRequest(result.Error);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetList()
+        {
+            var result = await _sender.Send(new GetCategoriesListQuery());
+            return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ERP.Application.Common.Models.Attendances.Commands.CheckIn;
 using ERP.Application.Common.Models.Attendances.Commands.CheckOut;
+using ERP.Application.Common.Models.Attendances.Queries.GetAttendanceByEmployee;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +29,12 @@ namespace ERP.WebApi.Controllers
         public async Task<IActionResult> Checkin(CheckInCommand command)
         {
             var result = await _sender.Send(command);
+            return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
+        }
+        [HttpGet("employee/{employeeId}")]
+        public async Task<IActionResult> GetByEmployee(int employeeId)
+        {
+            var result = await _sender.Send(new GetAttendanceByEmployeeQuery(employeeId));
             return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
         }
     }
