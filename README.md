@@ -45,6 +45,8 @@ Unit of Work** patterns.
 - [x] Purchase Orders & Sales Orders — full lifecycle (Create, Read, Receive/Confirm)
 - [x] Roles & Permissions management API (Create, Assign)
 - [x] Full API coverage across all modules (Payroll history, Stock visibility, Roles/Permissions listing, Attendance history)
+- [x] ERP.Application.UnitTests project (xUnit + Moq + FluentAssertions)
+- [x] CreateDepartmentCommandHandlerTests (Happy Path + Duplicate Name)
 ## 🚀 Getting Started
 
 1. Clone the repo
