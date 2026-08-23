@@ -6,4 +6,5 @@
     <Project Path="ERP.WebApi/ERP.WebApi.csproj" />
   </Folder>
   <Folder Name="/Tests/" />
+  <Project Path="ERP.Application.UnitTests/ERP.Application.UnitTests.csproj" />
 </Solution>
